@@ -24,9 +24,16 @@ io.on('connection',function(socket){
     	console.log('user disconnect');
     });
     socket.on('logon',function(path){
+        if(path.match(/([1-9])+/g)[0]<path.match(/([1-9])+/g)[1]){
+            socket.join(path.match(/([1-9])+/g)[0]+""+path.match(/([1-9])+/g)[1]);
+        }else{
+            socket.join(path.match(/([1-9])+/g)[1]+""+path.match(/([1-9])+/g)[0]);
+        }
+
+
         rest.get("http://localhost:8081/rest/chat"+path, function(data,response){
             data.list.forEach(function(msg){
-                io.emit('chat message',msg.message);
+                io.emit('chat message',msg);
             });
         });
     });
@@ -35,12 +42,13 @@ io.on('connection',function(socket){
         var matches = out.path.match(/([1-9])+/g);
         console.log(matches);
         rest.post("http://localhost:8081/rest/chat",  {
-        data: { sender: parseInt(matches[0]), recvier: parseInt(matches[0]), message: out.msg },
+        data: { sender: parseInt(matches[0]), recvier: parseInt(matches[1]), message: out.message },
         headers:{"Content-Type": "application/json"} 
         }, function(data,response) {
             console.log(data+response);
         });
-    	io.emit('chat message',out.msg);
+        out.sender = parseInt(matches[0])
+    	io.emit('chat message',out);
     });
 })
 
