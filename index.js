@@ -74,6 +74,7 @@ io.on('connection',function(socket){
         rest.get("http://localhost:8081/rest/chat"+path, function(data,response){
             data.list.forEach(function(msg){
                 //io.emit('chat message',msg);
+                socket.emit('chat message',msg);
             });
         });
     });
@@ -91,7 +92,7 @@ io.on('connection',function(socket){
         out.sender = parseInt(matches[0])
         console.log("other id"+users[room]);
         socket.broadcast.to(users[room]).emit('chat message',out);
-        
+        socket.emit('chat message',out);
         //io.emit('chat message',out);
             
     });
