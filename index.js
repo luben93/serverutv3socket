@@ -14,7 +14,7 @@ app.get('/:id/:other', function(req,res){
     var room = req.params.id+""+req.params.other;
 });
 
-
+ 
 io.on('connection',function(socket){
 
     console.log('a user connected default!!!!!!!');
