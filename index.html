@@ -24,17 +24,16 @@
          <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
         <script>
         var path = window.location.pathname;
-        // var room=path.match(/([1-9])+/g)[1]+""+path.match(/([1-9])+/g)[0];
-        // if(path.match(/([1-9])+/g)[0]<path.match(/([1-9])+/g)[1]){
-        //     room = path.match(/([1-9])+/g)[0]+""+path.match(/([1-9])+/g)[1]
-        // }
-        // console.log(room);
         console.log("init");
-        var socket = io();
-        socket.emit('logon',path);
-        //var socket = io(room);
-        console.log("sent logon");
-
+        var room=path.match(/([1-9])+/g)[1]+""+path.match(/([1-9])+/g)[0];
+        if(path.match(/([1-9])+/g)[0]<path.match(/([1-9])+/g)[1]){
+            room = path.match(/([1-9])+/g)[0]+""+path.match(/([1-9])+/g)[1]
+        }
+        console.log(room)
+        //var socket = io("/"+room);
+        var socket =io();
+        socket.emit('logon',path)
+        
 
         $('form').submit(function(){
             var out = {
@@ -45,10 +44,10 @@
             $('#m').val('');
             return false;
         });
-        socket.on('logged on',function(room){
-            console.log("room" +room);
-            socket = io(room);
-        });
+        // socket.on('logged on',function(room){
+        //     console.log("room " +room);
+        //     socket = io(room);
+        // });
         socket.on('chat message',function(msg) {
             $('#messages').append($('<li>').text(msg.sender + " said: "+ msg.message));
         })
