@@ -12,14 +12,28 @@ app.get('/:id/:other', function(req,res){
     //console.log(req.params.id);
     //console.log(req.params.other);
     var room = req.params.id+""+req.params.other;
+
 });
+
+function getProfileName(id){
+    console.log("getting profile name")
+if (otherName == ""){
+    rest.get("http://localhost:8081/rest/profile/"+id), function(data,response){
+        console.log(data);
+        otherName=data.name;
+    }
+}
+return otherName;
+}
 
 
 io.on('connection',function(socket){
+    var id = 0;
+    var other = 0;
 
     console.log('a user connected default!!!!!!!');
+
     //TODO login
-    
     socket.broadcast.emit('hi');
     
     socket.on('disconnect',function(){
@@ -30,11 +44,18 @@ io.on('connection',function(socket){
         console.log("my id"+socket.id)
         users[room]=socket.id;
 
+
         rest.get("http://localhost:8081/rest/chat"+path, function(data,response){
+            console.log(data);
             data.list.forEach(function(msg){
                 //io.emit('chat message',msg);
                 socket.emit('chat message',msg);
+
             });
+            //currentUsers[path.match(/([1-9])+/)[0]] = socket.id;
+
+        }).on('error',function(err){
+            console.log('something went wrong on the request', err.request.options);
         });
     });
     socket.on('chat message',function(out){
@@ -47,6 +68,8 @@ io.on('connection',function(socket){
         headers:{"Content-Type": "application/json"} 
         }, function(data,response) {
             console.log(data+response);
+        }).on('error',function(err){
+            console.log('something went wrong on the request', err.request.options);
         });
         out.sender = parseInt(matches[0])
         console.log("other id"+users[room]);
@@ -54,8 +77,10 @@ io.on('connection',function(socket){
         socket.emit('chat message',out);
         //io.emit('chat message',out);
             
+
     });
 });
+
 
 http.listen(3000, function(){
     console.log('magic *:3000');
