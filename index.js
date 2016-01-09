@@ -33,8 +33,11 @@ io.on('connection',function(socket){
 
         rest.get("http://localhost:8081/rest/chat"+path, function(data,response){
             data.list.forEach(function(msg){
-                //io.emit('chat message',msg);
-                socket.emit('chat message',msg);
+                // rest.get("http://localhost:8081/rest/profile/"+msg.sender,function(data,response){
+                //     console.log(data)
+                    socket.emit('chat message',msg);
+                // });
+                
             });
         }).on('error',function(err){
             console.log('something went wrong on the request', err.request.options);
