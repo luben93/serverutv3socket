@@ -12,6 +12,7 @@ app.get('/:id/:other', function(req,res){
     //console.log(req.params.id);
     //console.log(req.params.other);
     var room = req.params.id+""+req.params.other;
+    res.sendFile(__dirname + '/index.html');
 });
 
  
