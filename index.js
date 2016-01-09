@@ -12,47 +12,47 @@ app.get('/:id/:other', function(req,res){
     console.log(req.params.id);
     console.log(req.params.other);
     var room = req.params.id+""+req.params.other;
-    if(req.params.id > req.params.other){
-            room = req.params.other+""+req.params.id;
-    }
-    if (typeof chats.room == "undefined") {
-            chats[room] = io.of(room)
-    }
+    // if(req.params.id > req.params.other){
+    //         room = req.params.other+""+req.params.id;
+    // }
+    // if (typeof chats.room == "undefined") {
+    //         chats[room] = io.of(room)
+    // }
 
-    res.sendFile(__dirname + '/index.html');
-    console.log("sent index room "+ room)
-    chats[room].on('connection',function(socket){
-        console.log('a user connected');
-        socket.emit('chat message',{message: "hej",sender: "me"});
-            //TOPDO login
+    // res.sendFile(__dirname + '/index.html');
+    // console.log("sent index room "+ room)
+    // chats[room].on('connection',function(socket){
+    //     console.log('a user connected');
+    //     socket.emit('chat message',{message: "hej",sender: "me"});
+    //         //TOPDO login
             
-            socket.broadcast.emit('hi');
+    //         socket.broadcast.emit('hi');
             
-            socket.on('disconnect',function(){
-             console.log('user disconnect');
-            });
-            socket.on('logon',function(path){
+    //         socket.on('disconnect',function(){
+    //          console.log('user disconnect');
+    //         });
+    //         socket.on('logon',function(path){
                 
-                rest.get("http://localhost:8081/rest/chat"+path, function(data,response){
-                    data.list.forEach(function(msg){
-                        socket.emit('chat message',msg);
-                    });
-                });
-            });
-            socket.on('chat message',function(out){
+    //             rest.get("http://localhost:8081/rest/chat"+path, function(data,response){
+    //                 data.list.forEach(function(msg){
+    //                     socket.emit('chat message',msg);
+    //                 });
+    //             });
+    //         });
+    //         socket.on('chat message',function(out){
                 
-                var matches = out.path.match(/([1-9])+/g);
-                console.log(out);
-                rest.post("http://localhost:8081/rest/chat",  {
-                data: { sender: parseInt(matches[0]), recvier: parseInt(matches[1]), message: out.message },
-                headers:{"Content-Type": "application/json"} 
-                }, function(data,response) {
-                    //console.log(data+response);
-                });
-                out.sender = parseInt(matches[0])
-                socket.emit('chat message',out);
-        });
-    });
+    //             var matches = out.path.match(/([1-9])+/g);
+    //             console.log(out);
+    //             rest.post("http://localhost:8081/rest/chat",  {
+    //             data: { sender: parseInt(matches[0]), recvier: parseInt(matches[1]), message: out.message },
+    //             headers:{"Content-Type": "application/json"} 
+    //             }, function(data,response) {
+    //                 //console.log(data+response);
+    //             });
+    //             out.sender = parseInt(matches[0])
+    //             socket.emit('chat message',out);
+    //     });
+    // });
 });
 
 
