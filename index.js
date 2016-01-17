@@ -6,7 +6,8 @@ var Rest = require('node-rest-client').Client;
 var rest = new Rest();
 //var chats = [];
 var users = [];
-
+var resturl = "http://localhost:8081/rest/chat";
+resturl = "http://130.237.84.10:8081/starter/rest/chat";
 
 app.get('/:id/:other', function(req,res){
     //console.log(req.params.id);
@@ -31,7 +32,7 @@ io.on('connection',function(socket){
         console.log("my id"+socket.id)
         users[room]=socket.id;
 
-        rest.get("http://localhost:8081/rest/chat"+path, function(data,response){
+        rest.get(resturl+path, function(data,response){
             data.list.forEach(function(msg){
                 // rest.get("http://localhost:8081/rest/profile/"+msg.sender,function(data,response){
                 //     console.log(data)
@@ -48,7 +49,7 @@ io.on('connection',function(socket){
         var matches = out.path.match(/([1-9])+/g);
         var room = matches[0]+""+matches[1];
         console.log(out);
-        rest.post("http://localhost:8081/rest/chat",  {
+        rest.post(resturl,  {
         data: { sender: parseInt(matches[0]), recvier: parseInt(matches[1]), message: out.message },
         headers:{"Content-Type": "application/json"} 
         }, function(data,response) {
