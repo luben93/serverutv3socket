@@ -19,6 +19,7 @@ app.get('/:id/:other', function(req,res){
 io.configure(function () {  
   io.set("transports", ["xhr-polling"]); 
   io.set("polling duration", 10); 
+  console.log("io conf")
 });
 
  
