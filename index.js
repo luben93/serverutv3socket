@@ -15,13 +15,9 @@ app.get('/:id/:other', function(req,res){
     var room = req.params.id+""+req.params.other;
     res.sendFile(__dirname + '/index.html');
 });
-
-io.configure(function () {  
-  io.set("transports", ["xhr-polling"]); 
-  io.set("polling duration", 10); 
-  console.log("io conf")
-});
-
+ 
+ io.set('transports', ['xhr-polling']);
+io.set('polling duration', 10);
  
 io.on('connection',function(socket){
 
